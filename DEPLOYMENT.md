@@ -2,6 +2,15 @@
 
 Backend on Railway (Docker), voice frontend and analytics dashboard on Netlify.
 
+| Piece | URL | Repository |
+| --- | --- | --- |
+| Backend | <https://nora-production-ae4f.up.railway.app> | `FINOVA_AWAAZ_AI` (root) |
+| Voice / call testing | <https://starlit-boba-624371.netlify.app> | `FINOVA_AWAAZ_AI` → base `frontend` |
+| Analytics dashboard | <https://amazing-mooncake-6b9ea6.netlify.app> | **its own repo** in `dashboard/` |
+
+`dashboard/` is a separate git repository, so its changes must be committed and
+pushed from inside that folder — the root repo does not contain it.
+
 ---
 
 ## 0. Commit what the server needs
@@ -124,7 +133,7 @@ commands; Netlify adds the Next.js runtime plugin automatically.
 | --- | --- |
 | Base directory | `frontend` |
 | Build command | `npm run build` (from netlify.toml) |
-| Environment | `NEXT_PUBLIC_BACKEND_ORIGIN=https://YOUR-RAILWAY-DOMAIN` |
+| Environment | set in `frontend/netlify.toml` |
 
 ### Site B — analytics dashboard
 
@@ -132,7 +141,7 @@ commands; Netlify adds the Next.js runtime plugin automatically.
 | --- | --- |
 | Base directory | `dashboard` |
 | Build command | `npm run build` (from netlify.toml) |
-| Environment | `NEXT_PUBLIC_API_BASE=https://YOUR-RAILWAY-DOMAIN` |
+| Environment | set in `dashboard/netlify.toml` |
 
 **`NEXT_PUBLIC_*` values are baked in at build time.** Set them before the
 first build, and trigger a redeploy after any change — editing them without

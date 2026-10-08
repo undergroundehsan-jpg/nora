@@ -84,6 +84,9 @@ app.add_middleware(
         "http://localhost:3001",
         "http://127.0.0.1:3001",
         "https://early-guiding-feline.ngrok-free.app",
+        # Deployed Netlify sites
+        "https://starlit-boba-624371.netlify.app",      # voice / call testing
+        "https://amazing-mooncake-6b9ea6.netlify.app",  # analytics dashboard
     ],
     allow_origin_regex=r"https://.*\.netlify\.app",
     allow_credentials=True,
