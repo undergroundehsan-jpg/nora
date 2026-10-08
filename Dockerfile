@@ -21,12 +21,17 @@ COPY app/ ./app/
 COPY audio_cache/ ./audio_cache/
 COPY data/ ./data/
 
-# Written at runtime; mount a Railway volume here to keep call history
-# across deploys.
+# Existing call history, copied into /app/logs on first boot by the
+# entrypoint (a mounted volume starts empty and hides image contents).
+COPY seed/ ./seed-logs/
 RUN mkdir -p /app/logs
+
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 8080
 
-# One worker only: sessions live in process memory, so the Twilio media
-# stream and the REST call that started it must land on the same worker.
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080} --workers 1 --ws websockets"]
+# The entrypoint seeds call history, then starts uvicorn with a single
+# worker: sessions live in process memory, so the Twilio media stream and the
+# REST call that started it must land on the same worker.
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
