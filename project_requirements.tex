@@ -1,0 +1,813 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{array}
+\renewcommand{\arraystretch}{1.4}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{float}
+
+\onehalfspacing
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{NORA -- SRS Document}
+\fancyhead[R]{FAST NUCES}
+\fancyfoot[C]{\thepage}
+
+\titleformat{\chapter}{\Huge\bfseries}{\thechapter}{1em}{}
+
+\begin{document}
+
+% =========================
+% Title Page
+% =========================
+
+\begin{titlepage}
+\centering
+
+\vspace*{1cm}
+
+{\Huge \textbf{Conversational Voice Agent for Automated Payment \& Service Reminders}} \\[0.5cm]
+
+{\Large (NORA)} \\[1cm]
+
+{\Large Software Requirements Specification (SRS)} \\[1.5cm]
+
+\textbf{Supervisor:} Dr. Muhammad Nouman Noor \\[0.3cm]
+
+\textbf{Team Members:} \\[0.2cm]
+Ehsan Umran (22i-2724) \\
+Ayesha Suleman (22i-2002) \\
+Khadeejah Alam (22i-2063) \\[1cm]
+
+\textbf{Department of Software Engineering / Data Science} \\
+FAST National University of Computer and Emerging Sciences \\[1cm]
+
+\vfill
+
+{\large \today}
+
+\end{titlepage}
+
+% =========================
+% Abstract
+% =========================
+
+
+% =========================
+
+
+
+% =========================
+% Chapter 2
+% =========================
+
+\chapter{Project Requirements}
+
+
+\section{Use-Cases}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Module 1 – AI Voice Agent Module}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-1.1}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-1.1 \\ \hline
+\textbf{Use Case Name} & Initiate Outbound Reminder Call \\ \hline
+\textbf{Actor(s)} & System \\ \hline
+\textbf{Stakeholders \& Interests} & Organizations want automated reminder calls to reduce manual effort while ensuring timely communication with customers. \\ \hline
+\textbf{Trigger} & Scheduled reminder time is reached. \\ \hline
+\textbf{Preconditions} & Customer record exists and call is scheduled. \\ \hline
+\textbf{Success Postconditions} & Call connects and reminder message is delivered. \\ \hline
+\textbf{Failure Postconditions} & Call attempt fails and retry logic is scheduled. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & Moderate \\ \hline
+\textbf{Frequency of Use} & High \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-1.1, FR-1.2 \\ \hline
+\textbf{Main Flow} &
+1. System retrieves scheduled record. \newline
+2. System initiates call via telephony API. \newline
+3. System delivers reminder message. \\ \hline
+\textbf{Alternative Flows} &
+1. If unanswered, retry is scheduled. \\ \hline
+\textbf{Exceptions} &
+1. Network failure. \\ \hline
+\textbf{Special Requirements} &
+Must support real-time call streaming. \\ \hline
+\textbf{Assumptions} &
+Telephony service is available. \\ \hline
+\textbf{Notes and Issues} &
+Call cost optimization may be added later. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-1.2}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-1.2 \\ \hline
+\textbf{Use Case Name} & Retry Failed Call \\ \hline
+\textbf{Actor(s)} & System \\ \hline
+\textbf{Stakeholders \& Interests} & Organizations require automatic retries to maximize contact rate. \\ \hline
+\textbf{Trigger} & Initial call fails. \\ \hline
+\textbf{Preconditions} & Retry policy enabled. \\ \hline
+\textbf{Success Postconditions} & Call connects during retry. \\ \hline
+\textbf{Failure Postconditions} & Maximum retry attempts reached. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & Moderate \\ \hline
+\textbf{Frequency of Use} & Frequent \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-1.3 \\ \hline
+\textbf{Main Flow} &
+1. Detect failed call. \newline
+2. Schedule retry. \newline
+3. Attempt call again. \\ \hline
+\textbf{Alternative Flows} &
+1. Customer answers during retry. \\ \hline
+\textbf{Exceptions} &
+1. Retry scheduler failure. \\ \hline
+\textbf{Special Requirements} &
+Retry interval configurable. \\ \hline
+\textbf{Assumptions} &
+Telephony supports multiple attempts. \\ \hline
+\textbf{Notes and Issues} &
+SMS fallback may be added later. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-1.3}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-1.3 \\ \hline
+\textbf{Use Case Name} & Escalate to Human Agent \\ \hline
+\textbf{Actor(s)} & System, Human Agent \\ \hline
+\textbf{Stakeholders \& Interests} & Complex issues must be handled by humans to ensure customer satisfaction. \\ \hline
+\textbf{Trigger} & Escalation rule triggered. \\ \hline
+\textbf{Preconditions} & Active call session. \\ \hline
+\textbf{Success Postconditions} & Call transferred successfully. \\ \hline
+\textbf{Failure Postconditions} & Escalation fails and call logged. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & Moderate \\ \hline
+\textbf{Frequency of Use} & Low \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-1.7 \\ \hline
+\textbf{Main Flow} &
+1. Detect escalation condition. \newline
+2. Transfer call to agent. \\ \hline
+\textbf{Alternative Flows} &
+1. If no agent available, schedule callback. \\ \hline
+\textbf{Exceptions} &
+1. Transfer failure. \\ \hline
+\textbf{Special Requirements} &
+Preserve call context during transfer. \\ \hline
+\textbf{Assumptions} &
+Human agents available during working hours. \\ \hline
+\textbf{Notes and Issues} &
+CRM integration possible later. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Module 2 – Speech Processing Module}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-2.1}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-2.1 \\ \hline
+\textbf{Use Case Name} & Convert Speech to Text \\ \hline
+\textbf{Actor(s)} & System \\ \hline
+\textbf{Stakeholders \& Interests} & Accurate speech recognition is required for correct intent detection. \\ \hline
+\textbf{Trigger} & Customer speaks during call. \\ \hline
+\textbf{Preconditions} & Call is active. \\ \hline
+\textbf{Success Postconditions} & Speech converted to text accurately. \\ \hline
+\textbf{Failure Postconditions} & Recognition fails. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & High \\ \hline
+\textbf{Frequency of Use} & Continuous \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-2.1 \\ \hline
+\textbf{Main Flow} &
+1. Capture voice input. \newline
+2. Process using STT engine. \newline
+3. Return transcript. \\ \hline
+\textbf{Alternative Flows} &
+1. If unclear, request repetition. \\ \hline
+\textbf{Exceptions} &
+1. Background noise interference. \\ \hline
+\textbf{Special Requirements} &
+Must support multi-language input. \\ \hline
+\textbf{Assumptions} &
+Customer speaks clearly. \\ \hline
+\textbf{Notes and Issues} &
+Model tuning may improve accuracy. \\ \hline
+\end{longtable}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-2.2}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-2.2 \\ \hline
+\textbf{Use Case Name} & Convert Text to Speech \\ \hline
+\textbf{Actor(s)} & System \\ \hline
+\textbf{Stakeholders \& Interests} & The system must generate natural-sounding voice responses to ensure smooth customer interaction. \\ \hline
+\textbf{Trigger} & System prepares a response message. \\ \hline
+\textbf{Preconditions} & Text response generated by conversation module. \\ \hline
+\textbf{Success Postconditions} & Text converted into audible speech and played to customer. \\ \hline
+\textbf{Failure Postconditions} & Audio generation fails and fallback voice is used. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & High \\ \hline
+\textbf{Frequency of Use} & Continuous \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-2.2 \\ \hline
+\textbf{Main Flow} &
+1. Receive text response. \newline
+2. Process using TTS engine. \newline
+3. Stream audio to customer. \\ \hline
+\textbf{Alternative Flows} &
+1. If primary voice unavailable, use fallback voice. \\ \hline
+\textbf{Exceptions} &
+1. Audio streaming interruption. \\ \hline
+\textbf{Special Requirements} &
+Voice must sound natural and clear. \\ \hline
+\textbf{Assumptions} &
+TTS API service is available. \\ \hline
+\textbf{Notes and Issues} &
+Future enhancement may include emotion-based voice tone. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-2.3}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-2.3 \\ \hline
+\textbf{Use Case Name} & Detect Language \\ \hline
+\textbf{Actor(s)} & System \\ \hline
+\textbf{Stakeholders \& Interests} & The system should respond in the language spoken by the customer for better communication. \\ \hline
+\textbf{Trigger} & Customer begins speaking. \\ \hline
+\textbf{Preconditions} & Speech captured successfully. \\ \hline
+\textbf{Success Postconditions} & Language identified and response adapted accordingly. \\ \hline
+\textbf{Failure Postconditions} & Default language selected. \\ \hline
+\textbf{Priority} & Medium \\ \hline
+\textbf{Complexity} & Moderate \\ \hline
+\textbf{Frequency of Use} & Frequent \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-2.3 \\ \hline
+\textbf{Main Flow} &
+1. Capture speech input. \newline
+2. Analyze linguistic patterns. \newline
+3. Select appropriate language model. \\ \hline
+\textbf{Alternative Flows} &
+1. If confidence low, ask user preferred language. \\ \hline
+\textbf{Exceptions} &
+1. Mixed-language input. \\ \hline
+\textbf{Special Requirements} &
+Support at least two languages in prototype. \\ \hline
+\textbf{Assumptions} &
+Language detection API integrated. \\ \hline
+\textbf{Notes and Issues} &
+Future versions may support regional accents. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Module 3 – Conversation Management Module}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-3.1}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-3.1 \\ \hline
+\textbf{Use Case Name} & Confirm Payment \\ \hline
+\textbf{Actor(s)} & Customer, System \\ \hline
+\textbf{Stakeholders \& Interests} & Organizations require confirmation of payments to update records and avoid unnecessary follow-ups. \\ \hline
+\textbf{Trigger} & Customer verbally confirms payment. \\ \hline
+\textbf{Preconditions} & Active reminder call. \\ \hline
+\textbf{Success Postconditions} & Payment marked as confirmed. \\ \hline
+\textbf{Failure Postconditions} & Intent not recognized and clarification requested. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & Moderate \\ \hline
+\textbf{Frequency of Use} & High \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-3.1 \\ \hline
+\textbf{Main Flow} &
+1. Detect confirmation intent. \newline
+2. Update payment status. \newline
+3. Acknowledge confirmation. \\ \hline
+\textbf{Alternative Flows} &
+1. Low confidence triggers repetition request. \\ \hline
+\textbf{Exceptions} &
+1. Database update failure. \\ \hline
+\textbf{Special Requirements} &
+Intent detection confidence threshold required. \\ \hline
+\textbf{Assumptions} &
+Customer provides clear response. \\ \hline
+\textbf{Notes and Issues} &
+May integrate payment gateway in future. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-3.2}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-3.2 \\ \hline
+\textbf{Use Case Name} & Reschedule Reminder \\ \hline
+\textbf{Actor(s)} & Customer, System \\ \hline
+\textbf{Stakeholders \& Interests} & Customers may request additional time before payment. \\ \hline
+\textbf{Trigger} & Customer requests new reminder date. \\ \hline
+\textbf{Preconditions} & Active call session. \\ \hline
+\textbf{Success Postconditions} & New reminder stored in schedule. \\ \hline
+\textbf{Failure Postconditions} & Invalid date/time rejected. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & Moderate \\ \hline
+\textbf{Frequency of Use} & Moderate \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-3.2 \\ \hline
+\textbf{Main Flow} &
+1. Detect reschedule intent. \newline
+2. Ask for preferred date/time. \newline
+3. Validate and store new schedule. \\ \hline
+\textbf{Alternative Flows} &
+1. Invalid format prompts correction. \\ \hline
+\textbf{Exceptions} &
+1. Scheduler failure. \\ \hline
+\textbf{Special Requirements} &
+Must validate time conflicts. \\ \hline
+\textbf{Assumptions} &
+Customer provides valid input. \\ \hline
+\textbf{Notes and Issues} &
+SMS confirmation may be added later. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-3.3}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-3.3 \\ \hline
+\textbf{Use Case Name} & Detect Wrong Number \\ \hline
+\textbf{Actor(s)} & Customer, System \\ \hline
+\textbf{Stakeholders \& Interests} & Organizations must avoid repeated calls to incorrect numbers. \\ \hline
+\textbf{Trigger} & Customer states wrong number. \\ \hline
+\textbf{Preconditions} & Active call session. \\ \hline
+\textbf{Success Postconditions} & Number marked invalid. \\ \hline
+\textbf{Failure Postconditions} & Intent misclassified. \\ \hline
+\textbf{Priority} & Medium \\ \hline
+\textbf{Complexity} & Low \\ \hline
+\textbf{Frequency of Use} & Low \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-3.3 \\ \hline
+\textbf{Main Flow} &
+1. Detect wrong-number intent. \newline
+2. Mark number invalid in database. \newline
+3. Terminate call. \\ \hline
+\textbf{Alternative Flows} &
+1. Ask for clarification if uncertain. \\ \hline
+\textbf{Exceptions} &
+1. Database update failure. \\ \hline
+\textbf{Special Requirements} &
+Prevent further scheduling to same number. \\ \hline
+\textbf{Assumptions} &
+Customer responds truthfully. \\ \hline
+\textbf{Notes and Issues} &
+May request updated number later. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Module 4 – Admin Dashboard Module}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-4.1}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-4.1 \\ \hline
+\textbf{Use Case Name} & Upload Customer Data via CSV \\ \hline
+\textbf{Actor(s)} & Admin, System \\ \hline
+\textbf{Stakeholders \& Interests} & Administrators need bulk upload functionality to manage customers efficiently. \\ \hline
+\textbf{Trigger} & Admin uploads CSV file. \\ \hline
+\textbf{Preconditions} & Admin authenticated. \\ \hline
+\textbf{Success Postconditions} & Records validated and stored. \\ \hline
+\textbf{Failure Postconditions} & File rejected due to format errors. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & Moderate \\ \hline
+\textbf{Frequency of Use} & Moderate \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-4.1 \\ \hline
+\textbf{Main Flow} &
+1. Upload CSV file. \newline
+2. Validate structure. \newline
+3. Store records. \\ \hline
+\textbf{Alternative Flows} &
+1. Invalid rows flagged. \\ \hline
+\textbf{Exceptions} &
+1. File size exceeds limit. \\ \hline
+\textbf{Special Requirements} &
+Must support standard CSV format. \\ \hline
+\textbf{Assumptions} &
+Admin uses correct template. \\ \hline
+\textbf{Notes and Issues} &
+Excel support may be added later. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-4.2}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-4.2 \\ \hline
+\textbf{Use Case Name} & View Call Logs \\ \hline
+\textbf{Actor(s)} & Admin \\ \hline
+\textbf{Stakeholders \& Interests} & Admins require monitoring of call outcomes and transcripts. \\ \hline
+\textbf{Trigger} & Admin opens call log page. \\ \hline
+\textbf{Preconditions} & Admin logged in. \\ \hline
+\textbf{Success Postconditions} & Logs displayed with filters. \\ \hline
+\textbf{Failure Postconditions} & Logs fail to load. \\ \hline
+\textbf{Priority} & High \\ \hline
+\textbf{Complexity} & Low \\ \hline
+\textbf{Frequency of Use} & High \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-4.2 \\ \hline
+\textbf{Main Flow} &
+1. Retrieve call data. \newline
+2. Display logs with search filters. \\ \hline
+\textbf{Alternative Flows} &
+1. Show “No records found”. \\ \hline
+\textbf{Exceptions} &
+1. Database connection error. \\ \hline
+\textbf{Special Requirements} &
+Allow CSV export of logs. \\ \hline
+\textbf{Assumptions} &
+Call records stored properly. \\ \hline
+\textbf{Notes and Issues} &
+Pagination required for large data. \\ \hline
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Use Case UC-4.3}
+\begin{longtable}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use Case ID} & UC-4.3 \\ \hline
+\textbf{Use Case Name} & View Analytics Dashboard \\ \hline
+\textbf{Actor(s)} & Admin \\ \hline
+\textbf{Stakeholders \& Interests} & Organizations need insights into call success rate and performance metrics. \\ \hline
+\textbf{Trigger} & Admin opens analytics dashboard. \\ \hline
+\textbf{Preconditions} & Sufficient call data available. \\ \hline
+\textbf{Success Postconditions} & Charts and metrics displayed. \\ \hline
+\textbf{Failure Postconditions} & Data unavailable or incomplete. \\ \hline
+\textbf{Priority} & Medium \\ \hline
+\textbf{Complexity} & Moderate \\ \hline
+\textbf{Frequency of Use} & Moderate \\ \hline
+\textbf{Functional Requirement(s) Reference} & FR-4.3 \\ \hline
+\textbf{Main Flow} &
+1. Retrieve analytics data. \newline
+2. Generate charts. \newline
+3. Display performance metrics. \\ \hline
+\textbf{Alternative Flows} &
+1. Partial data displayed if limited records. \\ \hline
+\textbf{Exceptions} &
+1. Visualization rendering error. \\ \hline
+\textbf{Special Requirements} &
+Display call success rate and escalation statistics. \\ \hline
+\textbf{Assumptions} &
+Analytics engine operational. \\ \hline
+\textbf{Notes and Issues} &
+Advanced predictive analytics may be added later. \\ \hline
+\end{longtable}
+\section{Functional Requirements}
+
+\subsection{AI Voice Agent Module}
+
+\subsubsection{Initiate Outbound Reminder Call (UC-1.1)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Initiate Outbound Reminder Call}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+FR-1.1.1 & The system shall initiate outbound reminder calls using the telephony API. & High & None \\ \hline
+FR-1.1.2 & The system shall retrieve customer contact details from the database before initiating a call. & High & FR-1.1.1 \\ \hline
+FR-1.1.3 & The system shall play a predefined reminder message at the beginning of the call. & High & FR-1.1.1 \\ \hline
+FR-1.1.4 & The system shall retry the call up to a predefined limit if the call is not answered. & Medium & FR-1.1.1 \\ \hline
+FR-1.1.5 & The system shall terminate the call automatically if no response is detected within a defined timeout period. & Medium & FR-1.1.3 \\ \hline
+\end{tabularx}
+\end{table}
+\subsubsection{Handle User Response During Call (UC-1.2)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Handle User Response During Call}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+FR-1.2.1 & The system shall capture user voice input during an active call session. & High & FR-1.1.3 \\ \hline
+FR-1.2.2 & The system shall convert captured speech into text using the STT module. & High & FR-1.2.1 \\ \hline
+FR-1.2.3 & The system shall detect user intent from the transcribed text. & High & FR-1.2.2 \\ \hline
+FR-1.2.4 & The system shall generate a context-aware response based on detected intent. & High & FR-1.2.3 \\ \hline
+FR-1.2.5 & The system shall respond to the user using TTS-generated speech. & High & FR-1.2.4 \\ \hline
+\end{tabularx}
+\end{table}
+\subsubsection{Escalate Call to Human Agent (UC-1.3)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Escalate Call to Human Agent}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.3.1 & The system shall detect ambiguous or unrecognized user responses. & High & FR-1.2.3 \\ \hline
+
+FR-1.3.2 & The system shall escalate the call to a human agent if intent confidence falls below a predefined threshold. & High & FR-1.3.1 \\ \hline
+
+FR-1.3.3 & The system shall transfer the active call session to an available human agent. & High & FR-1.3.2 \\ \hline
+
+FR-1.3.4 & The system shall provide the human agent with conversation history and detected intents. & High & FR-1.3.3 \\ \hline
+
+FR-1.3.5 & The system shall log all escalation events for monitoring and reporting purposes. & Medium & FR-1.3.2 \\ \hline
+
+\end{tabularx}
+\end{table}
+\subsubsection{Manage Conversation Flow (UC-1.4)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Manage Conversation Flow}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.4.1 & The system shall maintain the state of the conversation throughout the call session. & High & None \\ \hline
+
+FR-1.4.2 & The system shall store previous user responses for contextual continuity. & High & FR-1.4.1 \\ \hline
+
+FR-1.4.3 & The system shall support predefined conversation paths for payment confirmation and rescheduling. & High & FR-1.4.1 \\ \hline
+
+FR-1.4.4 & The system shall implement retry logic for unclear or incomplete responses. & Medium & FR-1.4.2 \\ \hline
+
+FR-1.4.5 & The system shall terminate the conversation politely after task completion. & Medium & FR-1.4.3 \\ \hline
+
+\end{tabularx}
+\end{table}
+\subsubsection{Process Payment Confirmation (UC-1.5)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Process Payment Confirmation}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.5.1 & The system shall identify payment confirmation responses during the call. & High & FR-1.2.3 \\ \hline
+
+FR-1.5.2 & The system shall verify the payment status with the backend database. & High & FR-1.5.1 \\ \hline
+
+FR-1.5.3 & The system shall update the reminder status upon payment confirmation. & High & FR-1.5.2 \\ \hline
+
+FR-1.5.4 & The system shall verbally confirm successful payment acknowledgment to the user. & Medium & FR-1.5.3 \\ \hline
+
+FR-1.5.5 & The system shall log confirmed payments for reporting and auditing. & Medium & FR-1.5.3 \\ \hline
+
+\end{tabularx}
+\end{table}
+\subsubsection{Reschedule Reminder (UC-1.6)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Reschedule Reminder}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.6.1 & The system shall detect user requests to reschedule reminders. & High & FR-1.2.3 \\ \hline
+
+FR-1.6.2 & The system shall extract the new requested date and time from user input. & High & FR-1.6.1 \\ \hline
+
+FR-1.6.3 & The system shall validate the requested date and time. & High & FR-1.6.2 \\ \hline
+
+FR-1.6.4 & The system shall update the reminder schedule in the database. & High & FR-1.6.3 \\ \hline
+
+FR-1.6.5 & The system shall confirm the updated schedule verbally before ending the call. & Medium & FR-1.6.4 \\ \hline
+
+\end{tabularx}
+\end{table}
+\subsubsection{Log and Store Call Records (UC-1.7)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Log and Store Call Records}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.7.1 & The system shall record metadata for every outbound and inbound call. & High & FR-1.1.1 \\ \hline
+
+FR-1.7.2 & The system shall store call duration, timestamp, and call status. & High & FR-1.7.1 \\ \hline
+
+FR-1.7.3 & The system shall store full call transcripts generated during the session. & High & FR-1.2.2 \\ \hline
+
+FR-1.7.4 & The system shall associate call logs with the corresponding customer record. & High & FR-1.7.1 \\ \hline
+
+FR-1.7.5 & The system shall securely archive call logs for future auditing and reporting. & Medium & FR-1.7.2 \\ \hline
+
+\end{tabularx}
+\end{table}
+\subsubsection{Detect and Handle Call Failures (UC-1.8)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Detect and Handle Call Failures}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.8.1 & The system shall detect call failures including busy, unreachable, or network errors. & High & FR-1.1.1 \\ \hline
+
+FR-1.8.2 & The system shall log the reason for call failure. & High & FR-1.8.1 \\ \hline
+
+FR-1.8.3 & The system shall automatically retry failed calls based on predefined retry policies. & Medium & FR-1.8.1 \\ \hline
+
+FR-1.8.4 & The system shall notify administrators if repeated call failures exceed a threshold. & Medium & FR-1.8.3 \\ \hline
+
+FR-1.8.5 & The system shall mark reminders as failed after maximum retry attempts. & High & FR-1.8.3 \\ \hline
+
+\end{tabularx}
+\end{table}
+\subsubsection{Personalize Voice Interaction (UC-1.9)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Personalize Voice Interaction}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.9.1 & The system shall personalize reminder messages using customer-specific information. & High & FR-1.1.2 \\ \hline
+
+FR-1.9.2 & The system shall support multiple voice profiles for TTS output. & Medium & FR-1.2.5 \\ \hline
+
+FR-1.9.3 & The system shall adjust speech tone and speed based on predefined configurations. & Medium & FR-1.9.2 \\ \hline
+
+FR-1.9.4 & The system shall support multilingual reminder messages. & High & FR-1.2.5 \\ \hline
+
+FR-1.9.5 & The system shall detect preferred language from user profile settings. & Medium & FR-1.9.4 \\ \hline
+
+\end{tabularx}
+\end{table}
+\subsubsection{Enforce Call Compliance Rules (UC-1.10)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Enforce Call Compliance Rules}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.10.1 & The system shall ensure calls are placed only within permitted time windows. & High & FR-1.1.1 \\ \hline
+
+FR-1.10.2 & The system shall check customer opt-out status before initiating a call. & High & FR-1.1.2 \\ \hline
+
+FR-1.10.3 & The system shall immediately terminate calls upon opt-out request. & High & FR-1.2.3 \\ \hline
+
+FR-1.10.4 & The system shall maintain a Do-Not-Call list. & High & FR-1.10.2 \\ \hline
+
+FR-1.10.5 & The system shall log all compliance-related events for auditing. & Medium & FR-1.10.1 \\ \hline
+
+\end{tabularx}
+\end{table}
+\subsubsection{Monitor AI Performance Metrics (UC-1.11)}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements – Monitor AI Performance Metrics}
+\begin{tabularx}{\textwidth}{|l|X|l|l|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Dependency} \\ \hline
+
+FR-1.11.1 & The system shall calculate call success rates for completed reminders. & High & FR-1.7.2 \\ \hline
+
+FR-1.11.2 & The system shall measure intent recognition accuracy. & High & FR-1.2.3 \\ \hline
+
+FR-1.11.3 & The system shall track average call duration metrics. & Medium & FR-1.7.2 \\ \hline
+
+FR-1.11.4 & The system shall generate performance summaries for administrators. & Medium & FR-1.11.1 \\ \hline
+
+FR-1.11.5 & The system shall log AI confidence scores for analysis and improvement. & Medium & FR-1.2.3 \\ \hline
+
+\end{tabularx}
+\end{table}
+\section{Non-Functional Requirements}
+
+This section specifies the quality attributes that define how the AI Voice Reminder System performs, behaves, and maintains integrity under various operational conditions. These requirements ensure the system remains reliable, secure, scalable, and efficient throughout its lifecycle. All non-functional requirements are measurable, testable, and verifiable.
+\subsection{Reliability}
+
+Reliability defines the system’s ability to consistently perform automated reminder calls without unexpected failures or data loss.
+
+\begin{itemize}
+\item \textbf{REL-1:} The system shall maintain an uptime of at least 98\% during operational hours.
+\item \textbf{REL-2:} The system shall automatically retry failed API calls (telephony, STT, TTS) up to three times before marking them as failed.
+\item \textbf{REL-3:} The system shall log all service interruptions and maintain a Mean Time Between Failures (MTBF) greater than 250 hours.
+\item \textbf{REL-4:} All scheduled reminders shall remain persistent even during server restarts using transactional database operations.
+\item \textbf{REL-5:} Call session data shall be automatically saved in real time to prevent data loss during unexpected disconnections.
+\end{itemize}
+\subsection{Usability}
+
+Usability ensures that administrators can easily manage reminder campaigns and monitor AI performance without extensive training.
+
+\begin{itemize}
+\item \textbf{USE-1:} A new administrator shall be able to schedule a reminder campaign within five minutes of first use.
+\item \textbf{USE-2:} The dashboard shall provide tooltips and contextual guidance for all major features.
+\item \textbf{USE-3:} The system shall provide clear status indicators for call states (Completed, Failed, Escalated).
+\item \textbf{USE-4:} The admin interface shall load within 3 seconds on a standard broadband connection.
+\item \textbf{USE-5:} The system shall support responsive design for desktop and tablet devices.
+\item \textbf{USE-6:} The interface shall follow WCAG 2.1 accessibility contrast standards.
+\end{itemize}
+\subsection{Performance}
+
+Performance requirements define responsiveness, scalability, and processing efficiency of AI-driven calls.
+
+\begin{itemize}
+\item \textbf{PER-1:} 95\% of outbound calls shall be initiated within 2 seconds of scheduled time.
+\item \textbf{PER-2:} The system shall support at least 200 concurrent active calls without performance degradation.
+\item \textbf{PER-3:} Speech-to-Text processing shall return transcriptions within 1 second of user speech completion.
+\item \textbf{PER-4:} Text-to-Speech responses shall be generated within 1 second of response generation.
+\item \textbf{PER-5:} Database read/write operations shall respond within 250 milliseconds under normal load.
+\item \textbf{PER-6:} Call log retrieval queries shall return results within 2 seconds for datasets under 50,000 records.
+\end{itemize}
+\subsection{Security}
+
+Security ensures confidentiality, integrity, and authenticity of user data and call sessions.
+
+\begin{itemize}
+\item \textbf{SEC-1:} All communication between client, server, and telephony APIs shall use HTTPS (TLS 1.3).
+\item \textbf{SEC-2:} Administrator passwords shall be stored using salted hashing algorithms (bcrypt or Argon2).
+\item \textbf{SEC-3:} The system shall implement Role-Based Access Control (RBAC) for admin privileges.
+\item \textbf{SEC-4:} Sensitive data (customer details, transcripts, logs) shall be encrypted both in transit and at rest.
+\item \textbf{SEC-5:} The system shall log all authentication attempts and flag suspicious login behavior.
+\item \textbf{SEC-6:} API keys and environment credentials shall be stored securely using environment variables.
+\item \textbf{SEC-7:} The system shall enforce rate limiting to prevent denial-of-service attacks.
+\end{itemize}
+\subsection{Maintainability}
+
+Maintainability ensures ease of system updates, debugging, and AI model improvements.
+
+\begin{itemize}
+\item \textbf{MAI-1:} The system shall follow a modular architecture separating AI, telephony, database, and dashboard components.
+\item \textbf{MAI-2:} All source code shall follow standardized linting and formatting rules.
+\item \textbf{MAI-3:} Unit and integration test coverage shall exceed 80\%.
+\item \textbf{MAI-4:} The CI/CD pipeline shall automatically test builds before deployment.
+\item \textbf{MAI-5:} Configuration settings shall be externalized to allow updates without modifying source code.
+\end{itemize}
+\subsection{Scalability}
+
+Scalability ensures the system can handle increasing call volume and user growth.
+
+\begin{itemize}
+\item \textbf{SCA-1:} The system architecture shall support horizontal scaling using cloud infrastructure (AWS or similar).
+\item \textbf{SCA-2:} The database shall support at least 100,000 stored call records without performance degradation.
+\item \textbf{SCA-3:} The system shall allow integration of additional AI voice models without architectural redesign.
+\item \textbf{SCA-4:} Caching mechanisms shall be implemented to reduce repeated database queries.
+\end{itemize}
+\subsection{Portability}
+
+Portability ensures that the system operates across multiple environments and deployment platforms.
+
+\begin{itemize}
+\item \textbf{POR-1:} The system shall be deployable on major cloud platforms (AWS, Azure, or Google Cloud).
+\item \textbf{POR-2:} The application shall be containerized using Docker for environment consistency.
+\item \textbf{POR-3:} The admin dashboard shall be browser-compatible (Chrome, Firefox, Edge, Safari).
+\item \textbf{POR-4:} APIs shall follow RESTful standards to enable third-party integration.
+\end{itemize}
+\subsection{Availability}
+
+Availability measures how consistently the system remains operational and accessible.
+
+\begin{itemize}
+\item \textbf{AVA-1:} The system shall maintain an availability rate of 99\% in production.
+\item \textbf{AVA-2:} Scheduled maintenance shall not exceed 2 hours per month.
+\item \textbf{AVA-3:} The system shall display a maintenance notification page during downtime.
+\item \textbf{AVA-4:} Load balancing mechanisms shall ensure service continuity if one server instance fails.
+\end{itemize}
+\begin{table}[H]
+\centering
+\caption{Summary of Non-Functional Requirements for AI Voice Reminder System}
+\begin{tabularx}{\textwidth}{|l|l|X|l|}
+\hline
+\textbf{ID} & \textbf{Category} & \textbf{Description} & \textbf{Metric/Target} \\ \hline
+REL-1 & Reliability & System uptime during operational hours & 98\% uptime \\ \hline
+PER-2 & Performance & Concurrent active calls supported & 200 calls \\ \hline
+PER-5 & Performance & Database response time & 250 ms \\ \hline
+SEC-1 & Security & Secure communication protocol & HTTPS (TLS 1.3) \\ \hline
+SEC-4 & Security & Data encryption level & Encrypted in transit \& at rest \\ \hline
+MAI-3 & Maintainability & Test coverage requirement & >80\% coverage \\ \hline
+SCA-2 & Scalability & Maximum stored call records & 100,000 records \\ \hline
+POR-2 & Portability & Deployment containerization & Docker-enabled \\ \hline
+AVA-1 & Availability & Production uptime target & 99\% \\ \hline
+AVA-2 & Availability & Maximum monthly maintenance window & 2 hours \\ \hline
+\end{tabularx}
+\end{table}
+
+% =========================
+% Appendix
+% =========================
+
+
+
+
+\end{document}

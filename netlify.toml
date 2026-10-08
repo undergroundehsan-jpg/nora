@@ -1,0 +1,7 @@
+[build]
+  command = "cd frontend && npm run build"
+  publish = "frontend/.next"
+  functions = "frontend/netlify/functions"
+
+[context.production.environment]
+  NEXT_PUBLIC_BACKEND_ORIGIN = "https://early-guiding-feline.ngrok-free.app"

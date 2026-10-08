@@ -1,0 +1,18 @@
+# Runtime dependencies for the deployed backend only.
+# requirements.txt is the full local/dev environment (tests, PDF reports,
+# audio tooling); installing that on a server pulls in numba, pandas and
+# friends, which the app never imports and which slow the build down a lot.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+fastapi==0.135.1
+starlette==0.52.1
+uvicorn[standard]==0.41.0
+websockets==15.0.1
+httpx==0.28.1
+python-dotenv==1.2.2
+python-multipart==0.0.22
+groq==1.1.0
+twilio==9.6.3
+numpy==2.4.3
+torch==2.10.0+cpu
+silero-vad==6.2.1

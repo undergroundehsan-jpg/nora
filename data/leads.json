@@ -1,0 +1,20 @@
+[
+  {
+    "lead_id": "L-1001",
+    "lead_name": "Ehsan Khan",
+    "practice_name": "Mitchell Family Clinic",
+    "phone": "+923325026869",
+    "email": "ehsan.khan@example.com",
+    "city": "Lahore",
+    "timezone": "Asia/Karachi",
+    "language": "en",
+    "call_type": "REMINDER",
+    "campaign": "Clinic Billing",
+    "service": "annual check-up",
+    "amount_due": "$85.00",
+    "due_date": "14 October 2026",
+    "member_id": "MFC-4729158",
+    "patient_name": "Ehsan Khan",
+    "patient_dob": "15/01/1985"
+  }
+]
