@@ -400,6 +400,19 @@ async def place_twilio_outbound_call(payload: dict | None = None) -> tuple[dict,
     # Explicit "to" wins, then the lead's own number, then the .env default.
     to_number = body.get("to") or lead_phone or os.getenv("TWILIO_OUTBOUND_DEFAULT_TO", "").strip()
 
+    # No lead was named (the "Make a Phone Call" button sends none), so match
+    # the number being dialled against the customer list. Without this the call
+    # runs as the sample customer, with no amount or due date to talk about.
+    if not lead_id and to_number:
+        from app.services.leads import list_leads, normalize_phone
+        dialled = normalize_phone(to_number)
+        for candidate in list_leads():
+            if dialled and normalize_phone(candidate.get("phone", "")) == dialled:
+                lead_id = candidate["lead_id"]
+                print(f"[TWILIO] Matched {to_number} to customer {lead_id} "
+                      f"({candidate.get('lead_name', '')})")
+                break
+
     from_number = body.get("from") or os.getenv("TWILIO_NUMBER", "").strip()
 
     if not to_number:

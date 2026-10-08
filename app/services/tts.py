@@ -253,16 +253,23 @@ def _get_http_client():
     global _http_client
     if _http_client is None:
         import httpx
-        _http_client = httpx.AsyncClient(
-            # Per-operation timeouts: generous read timeout for streaming responses,
-            # tight connect timeout to fail fast on unreachable servers.
+        # Per-operation timeouts: generous read timeout for streaming responses,
+        # tight connect timeout to fail fast on unreachable servers.
+        settings = dict(
             timeout=httpx.Timeout(connect=5.0, read=10.0, write=5.0, pool=5.0),
-            http2=True,
             limits=httpx.Limits(
                 max_keepalive_connections=5,
                 keepalive_expiry=30.0,
             ),
         )
+        try:
+            _http_client = httpx.AsyncClient(http2=True, **settings)
+        except ImportError:
+            # HTTP/2 needs the h2 package. Falling back to HTTP/1.1 costs a
+            # little latency; refusing to build a client would silence the
+            # agent completely, which is far worse on a live call.
+            print("[TTS] h2 not installed — using HTTP/1.1 (install httpx[http2] to restore HTTP/2)")
+            _http_client = httpx.AsyncClient(http2=False, **settings)
     return _http_client
 
 
